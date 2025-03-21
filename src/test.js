@@ -1,0 +1,327 @@
+const data = [
+    {
+        "id": 1,
+        "_id": "solid_color",
+        "name": "Solid Color",
+        "description": "Mengisi seluruh strip dengan satu warna solid."
+    },
+    {
+        "id": 2,
+        "_id": "color_wipe",
+        "name": "Color Wipe",
+        "description": "Sapuan warna tunggal di sepanjang strip."
+    },
+    {
+        "id": 3,
+        "_id": "rainbow_cycle",
+        "name": "Rainbow Cycle",
+        "description": "Seluruh strip berubah menjadi pelangi yang berputar."
+    },
+    {
+        "id": 4,
+        "_id": "theater_chase",
+        "name": "Theater Chase",
+        "description": "Efek pengejaran seperti lampu teater."
+    },
+    {
+        "id": 5,
+        "_id": "strobe_light",
+        "name": "Strobe Light",
+        "description": "Efek lampu strobo cepat."
+    },
+    {
+        "id": 6,
+        "_id": "random_colors",
+        "name": "Random Colors",
+        "description": "Setiap LED mendapatkan warna acak."
+    },
+    {
+        "id": 7,
+        "_id": "fade_in_out",
+        "name": "Fade In/Out",
+        "description": "Cahaya memudar masuk dan keluar."
+    },
+    {
+        "id": 8,
+        "_id": "knight_rider",
+        "name": "Knight Rider",
+        "description": "Efek sapuan merah seperti KITT dari Knight Rider."
+    },
+    {
+        "id": 9,
+        "_id": "sparkle",
+        "name": "Sparkle",
+        "description": "Titik-titik cahaya muncul secara acak."
+    },
+    {
+        "id": 10,
+        "_id": "gradient_fade",
+        "name": "Gradient Fade",
+        "description": "Transisi halus antara dua warna."
+    },
+    {
+        "id": 11,
+        "_id": "fire_effect",
+        "name": "Fire Effect",
+        "description": "Efek api dengan perpaduan warna oranye dan merah."
+    },
+    {
+        "id": 12,
+        "_id": "twinkle_stars",
+        "name": "Twinkle Stars",
+        "description": "Efek bintang berkedip dengan warna putih."
+    },
+    {
+        "id": 13,
+        "_id": "comet_tail",
+        "name": "Comet Tail",
+        "description": "Ekor komet yang memudar."
+    },
+    {
+        "id": 14,
+        "_id": "pulse_wave",
+        "name": "Pulse Wave",
+        "description": "Gelombang warna yang berdenyut."
+    },
+    {
+        "id": 15,
+        "_id": "confetti",
+        "name": "Confetti",
+        "description": "Titik-titik warna acak tersebar di strip."
+    },
+    {
+        "id": 16,
+        "_id": "rainbow_fade",
+        "name": "Rainbow Fade",
+        "description": "Seluruh strip memudar melalui spektrum pelangi."
+    },
+    {
+        "id": 17,
+        "_id": "color_bounce",
+        "name": "Color Bounce",
+        "description": "Dua warna bergerak berlawanan arah di sepanjang strip."
+    },
+    {
+        "id": 18,
+        "_id": "color_wave",
+        "name": "Color Wave",
+        "description": "Gelombang warna yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 19,
+        "_id": "random_blink",
+        "name": "Random Blink",
+        "description": "LED menyala secara acak dalam interval waktu tertentu."
+    },
+    {
+        "id": 20,
+        "_id": "color_chase",
+        "name": "Color Chase",
+        "description": "Sapuan warna tunggal yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 21,
+        "_id": "color_gradient",
+        "name": "Color Gradient",
+        "description": "Transisi halus antara dua warna di sepanjang strip."
+    },
+    {
+        "id": 22,
+        "_id": "color_pulse",
+        "name": "Color Pulse",
+        "description": "Cahaya berdenyut dengan intensitas berubah."
+    },
+    {
+        "id": 23,
+        "_id": "color_ripple",
+        "name": "Color Ripple",
+        "description": "Efek riak warna yang menyebar dari tengah strip."
+    },
+    {
+        "id": 24,
+        "_id": "color_burst",
+        "name": "Color Burst",
+        "description": "Ledakan warna yang menyebar dari satu titik."
+    },
+    {
+        "id": 25,
+        "_id": "color_sweep",
+        "name": "Color Sweep",
+        "description": "Sapuan warna yang bergerak cepat di sepanjang strip."
+    },
+    {
+        "id": 26,
+        "_id": "fireworks",
+        "name": "Fireworks",
+        "description": "Simulasi kembang api dengan ledakan warna acak."
+    },
+    {
+        "id": 27,
+        "_id": "meteor_rain",
+        "name": "Meteor Rain",
+        "description": "Efek meteor yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 28,
+        "_id": "lightning",
+        "name": "Lightning",
+        "description": "Simulasi kilatan petir."
+    },
+    {
+        "id": 29,
+        "_id": "color_shift",
+        "name": "Color Shift",
+        "description": "Warna bergeser secara acak di sepanjang strip."
+    },
+    {
+        "id": 30,
+        "_id": "color_fade_out",
+        "name": "Color Fade Out",
+        "description": "Warna memudar keluar dari satu titik."
+    },
+    {
+        "id": 31,
+        "_id": "rainbow_comet",
+        "name": "Rainbow Comet",
+        "description": "Ekor komet pelangi yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 32,
+        "_id": "color_waves",
+        "name": "Color Waves",
+        "description": "Gelombang warna yang bergerak dengan variasi intensitas."
+    },
+    {
+        "id": 33,
+        "_id": "random_pulse",
+        "name": "Random Pulse",
+        "description": "Denyut cahaya acak di seluruh strip."
+    },
+    {
+        "id": 34,
+        "_id": "color_gradient_sweep",
+        "name": "Color Gradient Sweep",
+        "description": "Transisi warna gradien yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 35,
+        "_id": "color_bounce_wave",
+        "name": "Color Bounce Wave",
+        "description": "Dua gelombang warna bergerak berlawanan arah."
+    },
+    {
+        "id": 36,
+        "_id": "color_spiral",
+        "name": "Color Spiral",
+        "description": "Warna berputar seperti spiral di sepanjang strip."
+    },
+    {
+        "id": 37,
+        "_id": "color_explosion",
+        "name": "Color Explosion",
+        "description": "Ledakan warna yang menyebar dari tengah strip."
+    },
+    {
+        "id": 38,
+        "_id": "color_ripple_wave",
+        "name": "Color Ripple Wave",
+        "description": "Riak warna yang bergerak seperti gelombang air."
+    },
+    {
+        "id": 39,
+        "_id": "color_fade_in_out_wave",
+        "name": "Color Fade In/Out Wave",
+        "description": "Cahaya memudar masuk dan keluar dalam pola gelombang."
+    },
+    {
+        "id": 40,
+        "_id": "color_chase_rainbow",
+        "name": "Color Chase Rainbow",
+        "description": "Sapuan pelangi yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 41,
+        "_id": "breathing_light",
+        "name": "Breathing Light",
+        "description": "Cahaya bernapas dengan intensitas berubah."
+    },
+    {
+        "id": 42,
+        "_id": "random_sparkles",
+        "name": "Random Sparkles",
+        "description": "Kilauan cahaya acak di seluruh strip."
+    },
+    {
+        "id": 43,
+        "_id": "color_bounce_rainbow",
+        "name": "Color Bounce Rainbow",
+        "description": "Pelangi bergerak berlawanan arah di sepanjang strip."
+    },
+    {
+        "id": 44,
+        "_id": "color_gradient_fade",
+        "name": "Color Gradient Fade",
+        "description": "Gradien warna yang memudar secara dinamis."
+    },
+    {
+        "id": 45,
+        "_id": "color_wave_pulse",
+        "name": "Color Wave Pulse",
+        "description": "Gelombang warna dengan denyutan intensitas."
+    },
+    {
+        "id": 46,
+        "_id": "color_spiral_wave",
+        "name": "Color Spiral Wave",
+        "description": "Spiral warna yang bergerak seperti gelombang."
+    },
+    {
+        "id": 47,
+        "_id": "color_explosion_wave",
+        "name": "Color Explosion Wave",
+        "description": "Ledakan warna dengan efek gelombang."
+    },
+    {
+        "id": 48,
+        "_id": "color_ripple_pulse",
+        "name": "Color Ripple Pulse",
+        "description": "Riak warna dengan denyutan intensitas."
+    },
+    {
+        "id": 49,
+        "_id": "color_fade_in_out_spiral",
+        "name": "Color Fade In/Out Spiral",
+        "description": "Cahaya memudar masuk dan keluar dalam pola spiral."
+    },
+    {
+        "id": 50,
+        "_id": "color_chase_spiral",
+        "name": "Color Chase Spiral",
+        "description": "Sapuan warna spiral yang bergerak di sepanjang strip."
+    },
+    {
+        "id": 51,
+        "_id": "aurora_effect",
+        "name": "Aurora Effect",
+        "description": "Efek aurora dengan kombinasi warna biru, hijau, dan merah yang dinamis."
+    },
+    {
+        "id": 52,
+        "_id": "rainbow_wave",
+        "name": "Rainbow Wave",
+        "description": "Gelombang pelangi yang bergerak di sepanjang strip dengan transisi warna halus."
+    },
+    {
+        "id": 53,
+        "_id": "chasing_dots",
+        "name": "Chasing Dots",
+        "description": "Dua titik bergerak berlawanan arah di sepanjang strip dengan warna merah dan biru."
+    }
+]
+
+import fs from 'fs'
+
+data.map((val) => {
+    console.log(val._id + ".cpp");
+    fs.writeFileSync("/home/yopa/Documents/PlatformIO/Projects/Running-LED/src/animations/" + val._id + ".cpp", `#include "../LedAnimations.h"\n\n\n\n`, "utf8")
+})
