@@ -6,9 +6,9 @@ bool strobe_state = false;
 void strobe_light(CRGB color) {
   if (millis() - last_strobe_time >= animation_delay) {
     if (strobe_state) {
-      fill_solid(leds, ledCount, color);
+      fill_solid(leds, NUM_LEDS, color);
     } else {
-      fill_solid(leds, ledCount, CRGB::Black);
+      fill_solid(leds, NUM_LEDS, CRGB::Black);
     }
     FastLED.show();
     strobe_state = !strobe_state; // Toggle state

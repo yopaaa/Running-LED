@@ -37,30 +37,6 @@ void loadConfig()
     Serial.println("LED Count: " + String(cfg.numLeds));
 }
 
-void saveConfig()
-{
-    Serial.println("Saving config to NVS");
-
-    prefs.begin("cfg", false);
-
-    prefs.putString("ssid", cfg.ssid);
-    prefs.putString("pass", cfg.pass);
-
-    prefs.putBool("static", cfg.useStaticIP);
-    prefs.putString("ip", cfg.ip.toString());
-    prefs.putString("gw", cfg.gateway.toString());
-    prefs.putString("sn", cfg.subnet.toString());
-
-    prefs.putUChar("ledPin", cfg.ledPin);
-    prefs.putUChar("btnPin", cfg.buttonPin);
-    prefs.putUChar("bright", cfg.brightness);
-    prefs.putUShort("ledCnt", cfg.numLeds);
-
-    prefs.end();
-
-    Serial.println("Config saved");
-}
-
 bool connectWiFi()
 {
     if (cfg.ssid.length() == 0)
@@ -109,6 +85,57 @@ void startAP()
 
     Serial.println("AP started");
     Serial.println("AP IP: " + WiFi.softAPIP().toString());
+}
+
+void saveConfig()
+{
+    Serial.println("Saving config to NVS");
+
+    prefs.begin("cfg", false);
+
+    prefs.putString("ssid", cfg.ssid);
+    prefs.putString("pass", cfg.pass);
+
+    prefs.putBool("static", cfg.useStaticIP);
+    prefs.putString("ip", cfg.ip.toString());
+    prefs.putString("gw", cfg.gateway.toString());
+    prefs.putString("sn", cfg.subnet.toString());
+
+    prefs.putUChar("ledPin", cfg.ledPin);
+    prefs.putUChar("btnPin", cfg.buttonPin);
+    prefs.putUChar("bright", cfg.brightness);
+    prefs.putUShort("ledCnt", cfg.numLeds);
+
+    prefs.end();
+
+    Serial.println("Config saved");
+}
+
+void updateIfExists(const String &key, String &target)
+{
+    if (server.hasArg(key))
+    {
+        target = server.arg(key);
+        Serial.println(key + " updated");
+    }
+}
+
+void updateIfExists(const String &key, uint8_t &target)
+{
+    if (server.hasArg(key))
+    {
+        target = server.arg(key).toInt();
+        Serial.println(key + " updated");
+    }
+}
+
+void updateIfExists(const String &key, uint16_t &target)
+{
+    if (server.hasArg(key))
+    {
+        target = server.arg(key).toInt();
+        Serial.println(key + " updated");
+    }
 }
 
 void setupWeb()

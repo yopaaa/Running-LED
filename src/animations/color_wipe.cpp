@@ -5,7 +5,7 @@ uint8_t wipe_position = 0;
 
 void color_wipe(CRGB color) {
   if (millis() - last_color_wipe_time >= animation_delay) {
-    if (wipe_position < ledCount) {
+    if (wipe_position < NUM_LEDS) {
       leds[wipe_position] = color;
       FastLED.show();
       wipe_position++;

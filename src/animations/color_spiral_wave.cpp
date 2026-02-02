@@ -5,7 +5,7 @@ static uint8_t offset = 0;
 
 void color_spiral_wave(CRGB color) {
   if (millis() - last_spiral_wave_time >= animation_delay) {
-    for (int i = 0; i < ledCount; i++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = blend_colors(color, CRGB::Black, sin8((i + offset) * 4));
     }
     offset++;

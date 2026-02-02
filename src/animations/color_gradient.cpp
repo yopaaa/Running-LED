@@ -5,8 +5,8 @@ uint8_t blendd = 0;
 
 void color_gradient(CRGB color1, CRGB color2) {
   if (millis() - last_color_gradient_time >= animation_delay) {
-    for (int i = 0; i < ledCount; i++) {
-      leds[i] = blend_colors(color1, color2, map(i, 0, ledCount - 1, 0, blendd));
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = blend_colors(color1, color2, map(i, 0, NUM_LEDS - 1, 0, blendd));
     }
     blendd++;
     FastLED.show();

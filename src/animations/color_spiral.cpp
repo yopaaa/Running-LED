@@ -5,7 +5,7 @@ static uint8_t offset = 0;
 
 void color_spiral(CRGB color) {
   if (millis() - last_spiral_time >= animation_delay) {
-    for (int i = 0; i < ledCount; i++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CHSV((offset + i * 4) % 255, 255, 255);
     }
     offset++;
