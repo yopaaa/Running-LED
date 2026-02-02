@@ -6,7 +6,7 @@ static bool direction = true;
 
 void color_fade_in_out_wave(CRGB color) {
   if (millis() - last_fade_wave_time >= animation_delay) {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < ledCount; i++) {
       leds[i] = color.fadeLightBy(255 - (brightness + sin8(i * 4)));
     }
     brightness += direction ? 1 : -1;

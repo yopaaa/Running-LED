@@ -4,9 +4,10 @@
 #include <FastLED.h>
 
 // Konstanta global
-extern const int NUM_LEDS; // Jumlah LED pada strip
-extern CRGB leds[];        // Array LED
-
+// extern const int ledCount; // Jumlah LED pada strip
+// extern CRGB leds;        // Array LED
+extern CRGB *leds;
+extern uint16_t ledCount;
 // extern unsigned long last_animation_time = 0; // Untuk melacak waktu terakhir animasi diperbarui
 const unsigned long animation_delay = 50; // Delay default dalam milidetik
 

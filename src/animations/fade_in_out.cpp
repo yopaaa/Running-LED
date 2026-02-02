@@ -6,7 +6,7 @@ bool fade_direction = true;
 
 void fade_in_out(CRGB color) {
   if (millis() - last_fade_time >= animation_delay) {
-    fill_solid(leds, NUM_LEDS, color.fadeLightBy(255 - brightness));
+    fill_solid(leds, ledCount, color.fadeLightBy(255 - brightness));
     FastLED.show();
 
     if (fade_direction) {
