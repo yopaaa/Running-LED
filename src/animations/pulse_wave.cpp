@@ -1,11 +1,12 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 unsigned long last_pulse_time = 0;
 static uint8_t wave = 0;
 
 void pulse_wave() {
   if (millis() - last_pulse_time >= animation_delay) {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < cfg.numLeds; i++) {
       leds[i] = CHSV(wave + (i * 4), 255, sin8(i + wave));
     }
     wave++;

@@ -1,11 +1,12 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 unsigned long last_color_wipe_time = 0;
 uint8_t wipe_position = 0;
 
 void color_wipe(CRGB color) {
   if (millis() - last_color_wipe_time >= animation_delay) {
-    if (wipe_position < NUM_LEDS) {
+    if (wipe_position < cfg.numLeds) {
       leds[wipe_position] = color;
       FastLED.show();
       wipe_position++;

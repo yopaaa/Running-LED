@@ -1,4 +1,5 @@
 #include "Web.h"
+#include "./LedAnimations.h"
 
 Config cfg;
 Preferences prefs;
@@ -147,26 +148,32 @@ void setupWeb()
     Serial.println("HTTP GET /");
 
     String html =
-      "<form method='POST'>"
+  "<form method='POST' action='/'>"
 
-      "SSID:<input name='ssid' value='" + cfg.ssid + "'><br>"
-      "PASS:<input name='pass' value='" + cfg.pass + "'><br><br>"
+  "SSID:<input name='ssid' value='" + cfg.ssid + "'><br>"
+  "PASS:<input name='pass' value='" + cfg.pass + "'><br><br>"
 
-      "Static IP:<input type='checkbox' name='static' " +
-      String(cfg.useStaticIP ? "checked" : "") + "><br>"
+  "Static IP:<input type='checkbox' name='static' " +
+  String(cfg.useStaticIP ? "checked" : "") + "><br>"
 
-      "IP:<input name='ip' value='" + cfg.ip.toString() + "'><br>"
-      "Gateway:<input name='gw' value='" + cfg.gateway.toString() + "'><br>"
-      "Subnet:<input name='sn' value='" + cfg.subnet.toString() + "'><br><br>"
+  "IP:<input name='ip' value='" + cfg.ip.toString() + "'><br>"
+  "Gateway:<input name='gw' value='" + cfg.gateway.toString() + "'><br>"
+  "Subnet:<input name='sn' value='" + cfg.subnet.toString() + "'><br><br>"
 
-      "LED_PIN:<input name='led' value='" + String(cfg.ledPin) + "'><br>"
-      "BUTTON_PIN:<input name='btn' value='" + String(cfg.buttonPin) + "'><br>"
-      "BRIGHTNESS:<input name='br' value='" + String(cfg.brightness) + "'><br>"
-      "ledCount:<input name='cnt' value='" + String(cfg.numLeds) + "'><br><br>"
+  "LED_PIN:<input name='led' value='" + String(cfg.ledPin) + "'><br>"
+  "BUTTON_PIN:<input name='btn' value='" + String(cfg.buttonPin) + "'><br>"
+  "LED_COUNT:<input name='cnt' value='" + String(cfg.numLeds) + "'><br><br>"
 
-      "<button>Save</button></form><br>"
+  "<button>Save Config</button>"
+  "</form><hr>"
 
-      "Current IP: " + WiFi.localIP().toString();
+  "<form method='POST' action='/brightness'>"
+  "BRIGHTNESS (0-255):<input name='br' value='" + String(cfg.brightness) + "'>"
+  "<button>Set Brightness</button>"
+  "</form><br>"
+
+  "Current IP: " + WiFi.localIP().toString();
+
 
     server.send(200, "text/html", html); });
 
@@ -190,7 +197,30 @@ void setupWeb()
         Serial.println("New config received");
         saveConfig();
 
-        server.send(200, "text/html", "Saved. Reboot ESP32."); });
+        server.send(200, "text/html", "Saved. Reboot ESP32.");
+        ESP.restart(); });
+
+    server.on("/brightness", HTTP_POST, []()
+              {
+    Serial.println("HTTP POST /brightness");
+
+    if (!server.hasArg("br")) {
+        server.send(400, "text/plain", "Parameter br tidak ada");
+        return;
+    }
+
+    int br = server.arg("br").toInt();
+
+    if (br < 0) br = 0;
+    if (br > 255) br = 255;
+
+    cfg.brightness = br;
+    saveConfig();
+
+    FastLED.setBrightness(cfg.brightness);
+    FastLED.show();
+
+    server.send(200, "text/plain", "Brightness updated"); });
 
     server.begin();
     Serial.println("Web server running");

@@ -1,7 +1,8 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 void solid_color(CRGB color) {
-    fill_solid(leds, NUM_LEDS, color);
+    fill_solid(leds, cfg.numLeds, color);
     FastLED.show();
   }
 

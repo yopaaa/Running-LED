@@ -1,11 +1,12 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 unsigned long last_color_shift_time = 0;
 uint8_t hue_color_shift = 0;
 
 void color_shift() {
   if (millis() - last_color_shift_time >= animation_delay) {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < cfg.numLeds; i++) {
       leds[i] = CHSV(hue_color_shift + random8(30), 255, 255);
     }
     hue_color_shift++;

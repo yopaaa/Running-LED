@@ -1,4 +1,5 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 unsigned long last_fade_spiral_time = 0;
 static uint8_t brightness = 0;
@@ -6,7 +7,7 @@ static bool direction = true;
 
 void color_fade_in_out_spiral(CRGB color) {
   if (millis() - last_fade_spiral_time >= animation_delay) {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < cfg.numLeds; i++) {
       leds[i] = color.fadeLightBy(255 - (brightness + sin8(i * 4)));
     }
     brightness += direction ? 1 : -1;

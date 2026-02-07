@@ -1,4 +1,5 @@
 #include "../LedAnimations.h"
+#include "../Web.h"
 
 unsigned long last_strobe_time = 0;
 bool strobe_state = false;
@@ -6,9 +7,9 @@ bool strobe_state = false;
 void strobe_light(CRGB color) {
   if (millis() - last_strobe_time >= animation_delay) {
     if (strobe_state) {
-      fill_solid(leds, NUM_LEDS, color);
+      fill_solid(leds, cfg.numLeds, color);
     } else {
-      fill_solid(leds, NUM_LEDS, CRGB::Black);
+      fill_solid(leds, cfg.numLeds, CRGB::Black);
     }
     FastLED.show();
     strobe_state = !strobe_state; // Toggle state
