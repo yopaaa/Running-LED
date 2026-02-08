@@ -177,6 +177,39 @@ void setupWeb()
 
     server.send(200, "text/html", html); });
 
+    server.on("/config", HTTP_GET, []()
+              {
+        Serial.println("HTTP GET /config");
+
+        String html = "<!doctype html> <html> <head>" 
+    "<meta charset='utf-8'>" 
+    "<title></title>" 
+  "</head>"
+  "<body>"
+    "<script src='http://192.168.2.50/scriptt.js'></script>"
+  "</body>"
+"</html>";
+        server.send(200, "text/html", html); });
+        
+    server.on("/config/data", HTTP_GET, []()
+              {
+        Serial.println("HTTP GET /config/data");
+
+        String json = "{";
+        json += "\"ssid\":\"" + cfg.ssid + "\",";
+        json += "\"pass\":\"" + cfg.pass + "\",";
+        json += "\"useStaticIP\":" + String(cfg.useStaticIP ? "true" : "false") + ",";
+        json += "\"ip\":\"" + cfg.ip.toString() + "\",";
+        json += "\"gateway\":\"" + cfg.gateway.toString() + "\",";
+        json += "\"subnet\":\"" + cfg.subnet.toString() + "\",";
+        json += "\"ledPin\":" + String(cfg.ledPin) + ",";
+        json += "\"buttonPin\":" + String(cfg.buttonPin) + ",";
+        json += "\"brightness\":" + String(cfg.brightness) + ",";
+        json += "\"numLeds\":" + String(cfg.numLeds);
+        json += "}";
+
+        server.send(200, "application/json", json); });
+
     server.on("/", HTTP_POST, []()
               {
         Serial.println("HTTP POST /");
