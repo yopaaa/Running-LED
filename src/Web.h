@@ -30,8 +30,6 @@ extern WebServer server;
 void loadConfig();
 void saveConfig();
 
-bool connectWiFi();
-void startAP();
 void setupWeb();
 
 #endif

@@ -1,5 +1,7 @@
 #include "Web.h"
 #include "./LedAnimations.h"
+#include "./SavedWifi.h"
+#include "index_html.h"
 
 Config cfg;
 Preferences prefs;
@@ -27,65 +29,15 @@ void loadConfig()
     prefs.end();
 
     Serial.println("Config loaded:");
-    Serial.println("SSID: " + cfg.ssid);
-    Serial.println("Static IP: " + String(cfg.useStaticIP));
-    Serial.println("IP: " + cfg.ip.toString());
-    Serial.println("Gateway: " + cfg.gateway.toString());
-    Serial.println("Subnet: " + cfg.subnet.toString());
+    // Serial.println("SSID: " + cfg.ssid);
+    // Serial.println("Static IP: " + String(cfg.useStaticIP));
+    // Serial.println("IP: " + cfg.ip.toString());
+    // Serial.println("Gateway: " + cfg.gateway.toString());
+    // Serial.println("Subnet: " + cfg.subnet.toString());
     Serial.println("LED Pin: " + String(cfg.ledPin));
     Serial.println("Button Pin: " + String(cfg.buttonPin));
     Serial.println("Brightness: " + String(cfg.brightness));
     Serial.println("LED Count: " + String(cfg.numLeds));
-}
-
-bool connectWiFi()
-{
-    if (cfg.ssid.length() == 0)
-    {
-        Serial.println("SSID kosong");
-        return false;
-    }
-
-    Serial.println("Connecting to WiFi");
-    Serial.println("SSID: " + cfg.ssid);
-
-    WiFi.mode(WIFI_STA);
-
-    if (cfg.useStaticIP)
-    {
-        Serial.println("Using static IP");
-        WiFi.config(cfg.ip, cfg.gateway, cfg.subnet);
-    }
-
-    WiFi.begin(cfg.ssid.c_str(), cfg.pass.c_str());
-
-    for (int i = 1; i <= 5; i++)
-    {
-        Serial.print("Attempt ");
-        Serial.println(i);
-
-        if (WiFi.status() == WL_CONNECTED)
-        {
-            Serial.println("WiFi connected");
-            Serial.println("IP: " + WiFi.localIP().toString());
-            return true;
-        }
-        delay(2000);
-    }
-
-    Serial.println("WiFi failed");
-    return false;
-}
-
-void startAP()
-{
-    Serial.println("Starting AP mode");
-
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP("ESP32-Config");
-
-    Serial.println("AP started");
-    Serial.println("AP IP: " + WiFi.softAPIP().toString());
 }
 
 void saveConfig()
@@ -143,41 +95,15 @@ void setupWeb()
 {
     Serial.println("Starting web server");
 
-    server.on("/", HTTP_GET, []()
+    server.on("/welcome", HTTP_GET, []()
               {
     Serial.println("HTTP GET /");
-
-    String html =
-  "<form method='POST' action='/'>"
-
-  "SSID:<input name='ssid' value='" + cfg.ssid + "'><br>"
-  "PASS:<input name='pass' value='" + cfg.pass + "'><br><br>"
-
-  "Static IP:<input type='checkbox' name='static' " +
-  String(cfg.useStaticIP ? "checked" : "") + "><br>"
-
-  "IP:<input name='ip' value='" + cfg.ip.toString() + "'><br>"
-  "Gateway:<input name='gw' value='" + cfg.gateway.toString() + "'><br>"
-  "Subnet:<input name='sn' value='" + cfg.subnet.toString() + "'><br><br>"
-
-  "LED_PIN:<input name='led' value='" + String(cfg.ledPin) + "'><br>"
-  "BUTTON_PIN:<input name='btn' value='" + String(cfg.buttonPin) + "'><br>"
-  "LED_COUNT:<input name='cnt' value='" + String(cfg.numLeds) + "'><br><br>"
-
-  "<button>Save Config</button>"
-  "</form><hr>"
-
-  "<form method='POST' action='/brightness'>"
-  "BRIGHTNESS (0-255):<input name='br' value='" + String(cfg.brightness) + "'>"
-  "<button>Set Brightness</button>"
-  "</form><br>"
+    String html = String(INDEX_HTML);
 
   "Current IP: " + WiFi.localIP().toString();
-
-
     server.send(200, "text/html", html); });
 
-    server.on("/config", HTTP_GET, []()
+    server.on("/", HTTP_GET, []()
               {
         Serial.println("HTTP GET /config");
 
@@ -190,25 +116,37 @@ void setupWeb()
   "</body>"
 "</html>";
         server.send(200, "text/html", html); });
-        
+
     server.on("/config/data", HTTP_GET, []()
               {
-        Serial.println("HTTP GET /config/data");
+  Serial.println("HTTP GET /config/data");
 
-        String json = "{";
-        json += "\"ssid\":\"" + cfg.ssid + "\",";
-        json += "\"pass\":\"" + cfg.pass + "\",";
-        json += "\"useStaticIP\":" + String(cfg.useStaticIP ? "true" : "false") + ",";
-        json += "\"ip\":\"" + cfg.ip.toString() + "\",";
-        json += "\"gateway\":\"" + cfg.gateway.toString() + "\",";
-        json += "\"subnet\":\"" + cfg.subnet.toString() + "\",";
-        json += "\"ledPin\":" + String(cfg.ledPin) + ",";
-        json += "\"buttonPin\":" + String(cfg.buttonPin) + ",";
-        json += "\"brightness\":" + String(cfg.brightness) + ",";
-        json += "\"numLeds\":" + String(cfg.numLeds);
-        json += "}";
+  String json = "{";
 
-        server.send(200, "application/json", json); });
+  json += "\"wifiList\":[";
+
+  for (int i = 0; i < wifiCount; i++) {
+    json += "{";
+    json += "\"ssid\":\"" + wifiList[i].ssid + "\",";
+    json += "\"useStatic\":" + String(wifiList[i].useStatic ? "true" : "false") + ",";
+    json += "\"ip\":\"" + wifiList[i].ip.toString() + "\",";
+    json += "\"gateway\":\"" + wifiList[i].gw.toString() + "\",";
+    json += "\"subnet\":\"" + wifiList[i].sn.toString() + "\"";
+    json += "}";
+
+    if (i < wifiCount - 1) json += ",";
+  }
+
+  json += "],";
+
+  json += "\"ledPin\":" + String(cfg.ledPin) + ",";
+  json += "\"buttonPin\":" + String(cfg.buttonPin) + ",";
+  json += "\"brightness\":" + String(cfg.brightness) + ",";
+  json += "\"numLeds\":" + String(cfg.numLeds);
+
+  json += "}";
+
+  server.send(200, "application/json", json); });
 
     server.on("/", HTTP_POST, []()
               {
@@ -232,6 +170,76 @@ void setupWeb()
 
         server.send(200, "text/html", "Saved. Reboot ESP32.");
         ESP.restart(); });
+
+    server.on("/wifi/add", HTTP_POST, []()
+              {
+  Serial.println("HTTP POST /wifi/add");
+
+  if (!server.hasArg("ssid")) {
+    server.send(400, "text/plain", "SSID tidak ada");
+    return;
+  }
+
+  String ssid = server.arg("ssid");
+  String pass = server.arg("pass");
+
+  bool useStatic = server.hasArg("static");
+
+  IPAddress ip, gw, sn;
+  if (useStatic) {
+    ip.fromString(server.arg("ip"));
+    gw.fromString(server.arg("gw"));
+    sn.fromString(server.arg("sn"));
+  }
+
+  addOrUpdateWiFi(
+    ssid,
+    pass,
+    useStatic,
+    ip,
+    gw,
+    sn
+  );
+
+  Serial.println("WiFi saved: " + ssid);
+
+  server.send(200, "application/json",
+    "{\"status\":\"ok\"}"
+  ); });
+
+    server.on("/wifi/test", HTTP_POST, []()
+              {
+  String ssid = server.arg("ssid");
+  String pass = server.arg("pass");
+
+  WiFi.mode(WIFI_AP_STA);
+
+  WiFi.begin(ssid.c_str(), pass.c_str());
+
+  unsigned long start = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - start < 10000) {
+    delay(300);
+  }
+
+  if (WiFi.status() != WL_CONNECTED) {
+    server.send(500, "application/json", "{\"ok\":false}");
+    return;
+  }
+
+  IPAddress ip = WiFi.localIP();
+  IPAddress gw = WiFi.gatewayIP();
+  IPAddress sn = WiFi.subnetMask();
+
+  String json =
+    "{"
+    "\"ok\":true,"
+    "\"ip\":\"" + ip.toString() + "\","
+    "\"gw\":\"" + gw.toString() + "\","
+    "\"sn\":\"" + sn.toString() + "\""
+    "}";
+
+  WiFi.disconnect(false); // STA putus, AP tetap hidup
+  server.send(200, "application/json", json); });
 
     server.on("/brightness", HTTP_POST, []()
               {
