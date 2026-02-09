@@ -1,5 +1,6 @@
 #include "./LedAnimations.h"
 #include "Web.h"
+#include "SavedWifi.h"
 
 #define LED_PIN 13
 
@@ -32,11 +33,15 @@ void setup()
 {
   Serial.begin(9600);
   loadConfig();
+  loadWiFiList();
 
-  if (!connectWiFi())
+  WiFi.mode(WIFI_STA);
+
+  if (!connectSavedWiFi())
   {
     startAP();
   }
+
   setupWeb();
 
   Serial.println("Running LED");
@@ -58,6 +63,11 @@ void setup()
 
 void loop()
 {
+  #if defined(ESP8266)
+    if (WiFi.status() != WL_CONNECTED) {
+      MDNS.update();
+    }
+  #endif
   server.handleClient();
   // handle_button_press();
 
