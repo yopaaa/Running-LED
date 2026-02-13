@@ -7,14 +7,6 @@
 
 // ===== STRUCT CONFIG =====
 struct Config {
-  String ssid;
-  String pass;
-
-  bool useStaticIP;
-  IPAddress ip;
-  IPAddress gateway;
-  IPAddress subnet;
-
   uint8_t ledPin;
   uint8_t buttonPin;
   uint8_t brightness;
