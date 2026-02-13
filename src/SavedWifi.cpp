@@ -4,11 +4,13 @@
 WiFiCred wifiList[MAX_WIFI];
 uint8_t wifiCount = 0;
 
-void saveWiFiList() {
+void saveWiFiList()
+{
   prefs.begin("wifi", false);
   prefs.putUChar("count", wifiCount);
 
-  for (int i = 0; i < wifiCount; i++) {
+  for (int i = 0; i < wifiCount; i++)
+  {
     String k = String(i);
 
     prefs.putString(("s" + k).c_str(), wifiList[i].ssid);
@@ -23,14 +25,16 @@ void saveWiFiList() {
   prefs.end();
 }
 
-
-void loadWiFiList() {
+void loadWiFiList()
+{
   prefs.begin("wifi", true);
 
   wifiCount = prefs.getUChar("count", 0);
-  if (wifiCount > MAX_WIFI) wifiCount = MAX_WIFI;
+  if (wifiCount > MAX_WIFI)
+    wifiCount = MAX_WIFI;
 
-  for (int i = 0; i < wifiCount; i++) {
+  for (int i = 0; i < wifiCount; i++)
+  {
     String k = String(i);
 
     wifiList[i].ssid = prefs.getString(("s" + k).c_str(), "");
@@ -45,14 +49,15 @@ void loadWiFiList() {
   prefs.end();
 }
 
-
-int scanWiFi(String found[], int max) {
+int scanWiFi(String found[], int max)
+{
   Serial.println("Scan WiFi...");
 
   int n = WiFi.scanNetworks();
   int count = 0;
 
-  if (n <= 0) {
+  if (n <= 0)
+  {
     Serial.println("Tidak ada WiFi ditemukan");
     return 0;
   }
@@ -61,7 +66,8 @@ int scanWiFi(String found[], int max) {
   Serial.print(n);
   Serial.println(" jaringan");
 
-  for (int i = 0; i < n && count < max; i++) {
+  for (int i = 0; i < n && count < max; i++)
+  {
     String ssid = WiFi.SSID(i);
 
     found[count++] = ssid;
@@ -74,43 +80,46 @@ int scanWiFi(String found[], int max) {
     Serial.print(" dBm");
     Serial.print(" | Enkripsi: ");
     Serial.println(
-      WiFi.encryptionType(i) == WIFI_AUTH_OPEN
-        ? "OPEN"
-        : "SECURE"
-    );
+        WiFi.encryptionType(i) == WIFI_AUTH_OPEN
+            ? "OPEN"
+            : "SECURE");
   }
 
   Serial.println("Scan selesai");
   return count;
 }
 
-
-bool connectSavedWiFi() {
+bool connectSavedWiFi()
+{
   String found[10];
   int foundCount = scanWiFi(found, 10);
 
-  for (int i = 0; i < wifiCount; i++) {
-    for (int j = 0; j < foundCount; j++) {
-      if (wifiList[i].ssid == found[j]) {
+  for (int i = 0; i < wifiCount; i++)
+  {
+    for (int j = 0; j < foundCount; j++)
+    {
+      if (wifiList[i].ssid == found[j])
+      {
 
         WiFi.mode(WIFI_STA);
 
-        if (wifiList[i].useStatic) {
+        if (wifiList[i].useStatic)
+        {
           WiFi.config(
-            wifiList[i].ip,
-            wifiList[i].gw,
-            wifiList[i].sn
-          );
+              wifiList[i].ip,
+              wifiList[i].gw,
+              wifiList[i].sn);
         }
 
         WiFi.begin(
-          wifiList[i].ssid.c_str(),
-          wifiList[i].pass.c_str()
-        );
+            wifiList[i].ssid.c_str(),
+            wifiList[i].pass.c_str());
 
         unsigned long start = millis();
-        while (millis() - start < 8000) {
-          if (WiFi.status() == WL_CONNECTED) {
+        while (millis() - start < 8000)
+        {
+          if (WiFi.status() == WL_CONNECTED)
+          {
             Serial.println("--------------------------");
             Serial.println("Connected to: " + wifiList[i].ssid);
             Serial.print("Current IP  : ");
@@ -129,17 +138,18 @@ bool connectSavedWiFi() {
   return false;
 }
 
-
 void addOrUpdateWiFi(
-  String ssid,
-  String pass,
-  bool useStatic,
-  IPAddress ip,
-  IPAddress gw,
-  IPAddress sn
-) {
-  for (int i = 0; i < wifiCount; i++) {
-    if (wifiList[i].ssid == ssid) {
+    String ssid,
+    String pass,
+    bool useStatic,
+    IPAddress ip,
+    IPAddress gw,
+    IPAddress sn)
+{
+  for (int i = 0; i < wifiCount; i++)
+  {
+    if (wifiList[i].ssid == ssid)
+    {
       wifiList[i].pass = pass;
       wifiList[i].useStatic = useStatic;
       wifiList[i].ip = ip;
@@ -150,7 +160,8 @@ void addOrUpdateWiFi(
     }
   }
 
-  if (wifiCount < MAX_WIFI) {
+  if (wifiCount < MAX_WIFI)
+  {
     wifiList[wifiCount].ssid = ssid;
     wifiList[wifiCount].pass = pass;
     wifiList[wifiCount].useStatic = useStatic;
@@ -158,7 +169,9 @@ void addOrUpdateWiFi(
     wifiList[wifiCount].gw = gw;
     wifiList[wifiCount].sn = sn;
     wifiCount++;
-  } else {
+  }
+  else
+  {
     wifiList[0].ssid = ssid;
     wifiList[0].pass = pass;
     wifiList[0].useStatic = useStatic;
@@ -170,23 +183,45 @@ void addOrUpdateWiFi(
   saveWiFiList();
 }
 
+bool deleteWiFi(String ssid)
+{
+  for (int i = 0; i < wifiCount; i++)
+  {
+    if (wifiList[i].ssid == ssid)
+    {
 
+      // Geser data setelahnya ke kiri
+      for (int j = i; j < wifiCount - 1; j++)
+      {
+        wifiList[j] = wifiList[j + 1];
+      }
+
+      wifiCount--;
+
+      saveWiFiList();
+      return true;
+    }
+  }
+
+  return false; // SSID tidak ditemukan
+}
 
 void startAP()
 {
-    Serial.println("Starting AP mode");
+  Serial.println("Starting AP mode");
 
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP("ESP32-Config");
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP("ESP32-Config");
 
-    Serial.println("AP started");
-    Serial.println("AP IP: " + WiFi.softAPIP().toString());
+  Serial.println("AP started");
+  Serial.println("AP IP: " + WiFi.softAPIP().toString());
 
-    // Inisialisasi mDNS
-  if (MDNS.begin("esp")) { // Akan bisa diakses via http://esp.local
+  // Inisialisasi mDNS
+  if (MDNS.begin("esp"))
+  { // Akan bisa diakses via http://esp.local
     Serial.println("mDNS responder started: http://esp.local");
   }
-  
+
   // Tambahkan service HTTP agar mDNS lebih mudah ditemukan oleh browser
   MDNS.addService("http", "tcp", 80);
 }

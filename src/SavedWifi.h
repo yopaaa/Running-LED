@@ -37,6 +37,8 @@ void addOrUpdateWiFi(
   IPAddress gw,
   IPAddress sn
 );
+bool deleteWiFi(String ssid);
+
 
 
 void startAP();
